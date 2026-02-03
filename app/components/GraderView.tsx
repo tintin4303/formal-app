@@ -108,7 +108,7 @@ export default function GraderView() {
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-gray-700">Date</label>
-                                <input type="date" value={date} onChange={e => setDate(e.target.value)} className="w-full max-w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" style={{ minWidth: 0 }} />
+                                <input type="date" value={date} onChange={e => setDate(e.target.value)} className="block w-full appearance-none bg-white p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" />
                             </div>
                         </div>
                         <button onClick={nextStep} disabled={!contestant} className="w-full py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 disabled:opacity-50 transition">Next</button>
