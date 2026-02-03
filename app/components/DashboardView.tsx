@@ -4,11 +4,13 @@ import { useState, useEffect } from 'react';
 import QRCode from 'react-qr-code';
 import { gradingCriteria } from '../constants';
 import { Submission } from '../types';
+import StatisticsModal from './StatisticsModal';
 
 export default function DashboardView() {
     const [submissions, setSubmissions] = useState<Submission[]>([]);
     const [loading, setLoading] = useState(true);
     const [showQr, setShowQr] = useState(false);
+    const [showStats, setShowStats] = useState(false);
     const [origin, setOrigin] = useState('');
 
     const fetchSubmissions = async () => {
@@ -96,21 +98,27 @@ export default function DashboardView() {
 
     return (
         <div className="space-y-6 animate-in fade-in">
-            <div className="flex justify-between items-end">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
                 <div>
                     <h2 className="text-2xl font-bold text-gray-900">Evaluation Results</h2>
                     <p className="text-gray-500 text-sm mt-1">Total {submissions.length} submissions</p>
                 </div>
-                <div className="flex gap-2">
+                <div className="flex flex-wrap gap-2 w-full md:w-auto">
+                    <button
+                        onClick={() => setShowStats(true)}
+                        className="flex-1 md:flex-none px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 font-medium text-sm flex items-center justify-center gap-2 shadow-sm transition"
+                    >
+                        <span>📊 Statistics</span>
+                    </button>
                     <button
                         onClick={() => setShowQr(true)}
-                        className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium text-sm flex items-center gap-2 shadow-sm transition"
+                        className="flex-1 md:flex-none px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium text-sm flex items-center justify-center gap-2 shadow-sm transition"
                     >
                         <span>Show QR Code</span>
                     </button>
                     <button
                         onClick={handleBulkExport}
-                        className="px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-medium text-sm flex items-center gap-2 shadow-sm"
+                        className="flex-1 md:flex-none px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-medium text-sm flex items-center justify-center gap-2 shadow-sm"
                     >
                         <span>Download CSV</span>
                     </button>
@@ -213,6 +221,11 @@ export default function DashboardView() {
                         </div>
                     </div>
                 </div>
+            )}
+
+            {/* Statistics Modal */}
+            {showStats && (
+                <StatisticsModal submissions={submissions} onClose={() => setShowStats(false)} />
             )}
         </div>
     );
