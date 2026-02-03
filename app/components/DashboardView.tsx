@@ -67,6 +67,29 @@ export default function DashboardView() {
         link.click();
     };
 
+    const handleDownloadQr = () => {
+        const svg = document.getElementById("qr-code-svg");
+        if (!svg) return;
+
+        const svgData = new XMLSerializer().serializeToString(svg);
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+        const img = new Image();
+
+        img.onload = () => {
+            canvas.width = 1000;
+            canvas.height = 1000;
+            ctx?.drawImage(img, 0, 0, 1000, 1000);
+            const pngFile = canvas.toDataURL("image/png");
+            const downloadLink = document.createElement("a");
+            downloadLink.download = "speech-contest-qr.png";
+            downloadLink.href = pngFile;
+            downloadLink.click();
+        };
+
+        img.src = "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(svgData)));
+    };
+
     if (loading) {
         return <div className="text-center py-20 text-gray-500">Loading submissions...</div>;
     }
@@ -167,6 +190,7 @@ export default function DashboardView() {
 
                             <div className="bg-white p-4 rounded-xl border border-gray-100 shadow-inner inline-block">
                                 <QRCode
+                                    id="qr-code-svg"
                                     value={origin}
                                     size={200}
                                     style={{ height: "auto", maxWidth: "100%", width: "100%" }}
@@ -175,6 +199,12 @@ export default function DashboardView() {
                             </div>
 
                             <div className="mt-6 pt-6 border-t border-gray-100">
+                                <button
+                                    onClick={handleDownloadQr}
+                                    className="mb-4 w-full py-2 bg-gray-900 text-white rounded-lg text-sm font-medium hover:bg-black transition flex items-center justify-center gap-2"
+                                >
+                                    <span>⬇ Download QR Image</span>
+                                </button>
                                 <p className="text-xs text-gray-400 mb-2">Or share this link:</p>
                                 <code className="block bg-gray-50 p-3 rounded-lg text-sm text-blue-600 break-all select-all cursor-pointer hover:bg-gray-100 transition" onClick={() => navigator.clipboard.writeText(origin)}>
                                     {origin}
