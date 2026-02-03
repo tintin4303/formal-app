@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import DashboardView from '../components/DashboardView';
 
 export default function DashboardPage() {
@@ -8,15 +8,34 @@ export default function DashboardPage() {
     // In a real app, use NextAuth or similar
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [password, setPassword] = useState('');
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        const session = localStorage.getItem('admin_session');
+        if (session === 'true') {
+            setIsAuthenticated(true);
+        }
+        setIsLoading(false);
+    }, []);
 
     const handleLogin = (e: React.FormEvent) => {
         e.preventDefault();
         if (password === 'admin123') { // Simple hardcoded password
+            localStorage.setItem('admin_session', 'true');
             setIsAuthenticated(true);
         } else {
             alert('Incorrect password');
         }
     };
+
+    const handleLogout = () => {
+        localStorage.removeItem('admin_session');
+        setIsAuthenticated(false);
+    };
+
+    if (isLoading) {
+        return <div className="min-h-screen bg-gray-50 flex items-center justify-center text-gray-400">Loading...</div>;
+    }
 
     if (!isAuthenticated) {
         return (
@@ -53,7 +72,7 @@ export default function DashboardPage() {
                     <span className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full ml-2">Teacher Dashboard</span>
                 </div>
                 <div>
-                    <button onClick={() => setIsAuthenticated(false)} className="text-sm text-gray-500 hover:text-gray-900">Logout</button>
+                    <button onClick={handleLogout} className="text-sm text-gray-500 hover:text-gray-900">Logout</button>
                 </div>
             </nav>
 
