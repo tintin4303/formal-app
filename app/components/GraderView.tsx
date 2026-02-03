@@ -1,16 +1,26 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { gradingCriteria } from '../constants';
 import { Submission } from '../types';
 
 export default function GraderView() {
     const [contestant, setContestant] = useState('');
-    const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
+    const [date] = useState(new Date().toISOString().split('T')[0]);
     const [scores, setScores] = useState<Record<string, number>>({ content: 0, pronunciation: 0, fluency: 0, expression: 0, impression: 0 });
     const [currentStep, setCurrentStep] = useState(0);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
+    const [gradedContestants, setGradedContestants] = useState<string[]>([]);
+
+    useEffect(() => {
+        const saved = localStorage.getItem('graded_contestants');
+        if (saved) {
+            setGradedContestants(JSON.parse(saved));
+        }
+    }, []);
+
+    const isAlreadyGraded = gradedContestants.includes(contestant);
 
     const handleScoreChange = (id: string, val: string, max: number) => {
         let num = Number(val);
@@ -55,6 +65,9 @@ export default function GraderView() {
             if (!res.ok) throw new Error('Failed to submit');
 
             setIsSuccess(true);
+            const newGraded = [...gradedContestants, contestant];
+            setGradedContestants(newGraded);
+            localStorage.setItem('graded_contestants', JSON.stringify(newGraded));
         } catch (error) {
             alert('Error submitting score. Please try again.');
             console.error(error);
@@ -78,7 +91,7 @@ export default function GraderView() {
                 <p className="text-gray-500 mb-8">Thank you for grading contestant {contestant}.</p>
                 <button
                     onClick={resetForm}
-                    className="px-8 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition"
+                    className="px-8 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transform hover:scale-105 active:scale-95 transition-all"
                 >
                     Grade Next Contestant
                 </button>
@@ -100,18 +113,26 @@ export default function GraderView() {
                 {/* Step 0: Intro */}
                 {currentStep === 0 && (
                     <div className="space-y-6 animate-in fade-in">
-                        <h2 className="text-2xl font-bold">Start Evaluation</h2>
+                        <h2 className="text-2xl font-bold">Rate Contestant</h2>
                         <div className="space-y-4">
                             <div>
                                 <label className="block text-sm font-medium text-gray-700">Contestant No.</label>
-                                <input value={contestant} onChange={e => setContestant(e.target.value)} className="w-full max-w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" placeholder="e.g. 001" autoFocus />
-                            </div>
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700">Date</label>
-                                <input type="date" value={date} onChange={e => setDate(e.target.value)} className="block w-full appearance-none bg-white p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" />
+                                <input value={contestant} onChange={e => setContestant(e.target.value)} className="w-full max-w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" autoFocus />
                             </div>
                         </div>
-                        <button onClick={nextStep} disabled={!contestant} className="w-full py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 disabled:opacity-50 transition">Next</button>
+                        {isAlreadyGraded && (
+                            <div className="bg-red-50 text-red-600 p-3 rounded-lg text-sm flex items-center gap-2">
+                                <span>⚠️</span>
+                                <div>You have already graded Contestant <strong>{contestant}</strong>.</div>
+                            </div>
+                        )}
+                        <button
+                            onClick={nextStep}
+                            disabled={!contestant || isAlreadyGraded}
+                            className="w-full py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-[1.02] active:scale-100 transition-all"
+                        >
+                            Next
+                        </button>
                     </div>
                 )}
 
@@ -132,6 +153,7 @@ export default function GraderView() {
                                     </ul>
                                     <div className="pt-2">
                                         <input
+                                            key={c.id}
                                             type="number"
                                             value={scores[c.id] || ''}
                                             onChange={e => handleScoreChange(c.id, e.target.value, c.maxPoints)}
@@ -141,8 +163,8 @@ export default function GraderView() {
                                         />
                                     </div>
                                     <div className="flex gap-3 pt-4">
-                                        <button onClick={prevStep} className="flex-1 py-3 border rounded-lg hover:bg-gray-50">Back</button>
-                                        <button onClick={nextStep} className="flex-1 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Next</button>
+                                        <button onClick={prevStep} className="flex-1 py-3 border rounded-lg hover:bg-gray-50 transform hover:scale-[1.02] active:scale-[0.98] transition-all">Back</button>
+                                        <button onClick={nextStep} className="flex-1 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transform hover:scale-[1.02] active:scale-[0.98] transition-all">Next</button>
                                     </div>
                                 </>
                             );
@@ -161,7 +183,7 @@ export default function GraderView() {
                         <button
                             onClick={finishGrading}
                             disabled={isSubmitting}
-                            className="w-full py-4 bg-green-600 text-white rounded-lg font-bold text-lg hover:bg-green-700 shadow-lg transition disabled:opacity-50"
+                            className="w-full py-4 bg-green-600 text-white rounded-lg font-bold text-lg hover:bg-green-700 shadow-lg transform hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50"
                         >
                             {isSubmitting ? 'Saving...' : 'Save Evaluation'}
                         </button>

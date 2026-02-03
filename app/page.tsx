@@ -10,7 +10,7 @@ export default function Home() {
           <span>🇯🇵 Japanese Speech Contest</span>
         </div>
         <div className="text-sm text-gray-500">
-          Judge Evaluation Portal
+          Evaluation Portal
         </div>
       </nav>
 
