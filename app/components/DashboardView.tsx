@@ -6,12 +6,56 @@ import { gradingCriteria } from '../constants';
 import { Submission } from '../types';
 import StatisticsModal from './StatisticsModal';
 
+type SortConfig = {
+    key: string;
+    direction: 'asc' | 'desc';
+} | null;
+
 export default function DashboardView() {
     const [submissions, setSubmissions] = useState<Submission[]>([]);
     const [loading, setLoading] = useState(true);
     const [showQr, setShowQr] = useState(false);
     const [showStats, setShowStats] = useState(false);
     const [origin, setOrigin] = useState('');
+    const [searchTerm, setSearchTerm] = useState('');
+    const [sortConfig, setSortConfig] = useState<SortConfig>(null);
+
+    const filteredAndSortedSubmissions = [...submissions]
+        .filter(s =>
+            s.contestant.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            s.finalGrade.toLowerCase().includes(searchTerm.toLowerCase())
+        )
+        .sort((a, b) => {
+            if (!sortConfig) return 0;
+
+            const { key, direction } = sortConfig;
+            let aValue: any = a[key as keyof Submission];
+            let bValue: any = b[key as keyof Submission];
+
+            // Handle nested scores
+            if (key.startsWith('scores.')) {
+                const metric = key.split('.')[1];
+                aValue = a.scores[metric] || 0;
+                bValue = b.scores[metric] || 0;
+            }
+
+            if (aValue < bValue) return direction === 'asc' ? -1 : 1;
+            if (aValue > bValue) return direction === 'asc' ? 1 : -1;
+            return 0;
+        });
+
+    const requestSort = (key: string) => {
+        let direction: 'asc' | 'desc' = 'asc';
+        if (sortConfig && sortConfig.key === key && sortConfig.direction === 'asc') {
+            direction = 'desc';
+        }
+        setSortConfig({ key, direction });
+    };
+
+    const getSortIndicator = (key: string) => {
+        if (!sortConfig || sortConfig.key !== key) return '↕';
+        return sortConfig.direction === 'asc' ? '↑' : '↓';
+    };
 
     const fetchSubmissions = async () => {
         try {
@@ -40,7 +84,7 @@ export default function DashboardView() {
             try {
                 await fetch(`/api/submissions/${id}`, { method: 'DELETE' });
                 setSubmissions(prev => prev.filter(s => s.id !== id));
-            } catch (error) {
+            } catch {
                 alert('Failed to delete');
             }
         }
@@ -101,31 +145,48 @@ export default function DashboardView() {
             <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
                 <div>
                     <h2 className="text-2xl font-bold text-gray-900">Evaluation Results</h2>
-                    <p className="text-gray-500 text-sm mt-1">Total {submissions.length} submissions</p>
+                    <p className="text-gray-500 text-sm mt-1">
+                        {searchTerm ? `Found ${filteredAndSortedSubmissions.length} matches` : `Total ${submissions.length} submissions`}
+                    </p>
                 </div>
-                <div className="flex flex-wrap gap-2 w-full md:w-auto">
-                    <button
-                        onClick={() => setShowStats(true)}
-                        className="flex-1 md:flex-none px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 font-medium text-sm flex items-center justify-center gap-2 shadow-sm transition"
-                    >
-                        <span>Statistics</span>
-                    </button>
-                    <button
-                        onClick={() => setShowQr(true)}
-                        className="flex-1 md:flex-none px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium text-sm flex items-center justify-center gap-2 shadow-sm transition"
-                    >
-                        <span>Show QR Code</span>
-                    </button>
-                    <button
-                        onClick={handleBulkExport}
-                        className="flex-1 md:flex-none px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-medium text-sm flex items-center justify-center gap-2 shadow-sm"
-                    >
-                        <span>Download CSV</span>
-                    </button>
+                <div className="flex flex-col md:flex-row gap-3 w-full md:w-auto">
+                    <input
+                        type="text"
+                        placeholder="Search contestant..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm w-full md:w-64"
+                    />
+                    <div className="flex gap-2">
+                        <button
+                            onClick={() => setShowStats(true)}
+                            className="flex-1 md:flex-none px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 font-medium text-sm flex items-center justify-center gap-2 shadow-sm transition"
+                        >
+                            <span>Statistics</span>
+                        </button>
+                        <button
+                            onClick={() => setShowQr(true)}
+                            className="flex-1 md:flex-none px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium text-sm flex items-center justify-center gap-2 shadow-sm transition"
+                        >
+                            <span>Show QR Code</span>
+                        </button>
+                        <button
+                            onClick={handleBulkExport}
+                            className="flex-1 md:flex-none px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-medium text-sm flex items-center justify-center gap-2 shadow-sm"
+                        >
+                            <span>Download CSV</span>
+                        </button>
+                    </div>
                 </div>
             </div>
 
-            {submissions.length === 0 ? (
+            {filteredAndSortedSubmissions.length === 0 && submissions.length > 0 ? (
+                <div className="text-center py-20 bg-white rounded-2xl border border-dashed border-gray-300">
+                    <div className="text-gray-400 mb-4 text-4xl">🔍</div>
+                    <h3 className="text-lg font-semibold text-gray-900">No matches found</h3>
+                    <p className="text-gray-500 mt-2">Try a different search term.</p>
+                </div>
+            ) : filteredAndSortedSubmissions.length === 0 ? (
                 <div className="text-center py-20 bg-white rounded-2xl border border-dashed border-gray-300">
                     <div className="text-gray-400 mb-4 text-6xl">📝</div>
                     <h3 className="text-xl font-semibold text-gray-900">No evaluations yet</h3>
@@ -137,18 +198,32 @@ export default function DashboardView() {
                         <table className="w-full text-left text-sm text-gray-600">
                             <thead className="bg-gray-50 text-gray-900 font-semibold border-b border-gray-200">
                                 <tr>
-                                    <th className="p-4">Contestant</th>
-                                    <th className="p-4">Date</th>
-                                    <th className="p-4 text-center">Total</th>
-                                    <th className="p-4 text-center">Grade</th>
-                                    <th className="p-4 text-right hidden md:table-cell">Content</th>
-                                    <th className="p-4 text-right hidden md:table-cell">Pronunciation</th>
-                                    <th className="p-4 text-right hidden md:table-cell">Fluency</th>
+                                    <th className="p-4 cursor-pointer hover:bg-gray-100 transition select-none" onClick={() => requestSort('contestant')}>
+                                        Contestant <span className="text-gray-400 ml-1">{getSortIndicator('contestant')}</span>
+                                    </th>
+                                    <th className="p-4 cursor-pointer hover:bg-gray-100 transition select-none" onClick={() => requestSort('date')}>
+                                        Date <span className="text-gray-400 ml-1">{getSortIndicator('date')}</span>
+                                    </th>
+                                    <th className="p-4 text-center cursor-pointer hover:bg-gray-100 transition select-none" onClick={() => requestSort('totalScore')}>
+                                        Total <span className="text-gray-400 ml-1">{getSortIndicator('totalScore')}</span>
+                                    </th>
+                                    <th className="p-4 text-center cursor-pointer hover:bg-gray-100 transition select-none" onClick={() => requestSort('finalGrade')}>
+                                        Grade <span className="text-gray-400 ml-1">{getSortIndicator('finalGrade')}</span>
+                                    </th>
+                                    <th className="p-4 text-right hidden md:table-cell cursor-pointer hover:bg-gray-100 transition select-none" onClick={() => requestSort('scores.content')}>
+                                        Content <span className="text-gray-400 ml-1">{getSortIndicator('scores.content')}</span>
+                                    </th>
+                                    <th className="p-4 text-right hidden md:table-cell cursor-pointer hover:bg-gray-100 transition select-none" onClick={() => requestSort('scores.pronunciation')}>
+                                        Pronunciation <span className="text-gray-400 ml-1">{getSortIndicator('scores.pronunciation')}</span>
+                                    </th>
+                                    <th className="p-4 text-right hidden md:table-cell cursor-pointer hover:bg-gray-100 transition select-none" onClick={() => requestSort('scores.fluency')}>
+                                        Fluency <span className="text-gray-400 ml-1">{getSortIndicator('scores.fluency')}</span>
+                                    </th>
                                     <th className="p-4 text-right">Actions</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-gray-100">
-                                {submissions.map((s) => (
+                                {filteredAndSortedSubmissions.map((s) => (
                                     <tr key={s.id} className="hover:bg-gray-50 transition">
                                         <td className="p-4 font-medium text-gray-900">{s.contestant}</td>
                                         <td className="p-4">{s.date}</td>
