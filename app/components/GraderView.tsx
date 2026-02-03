@@ -85,16 +85,19 @@ export default function GraderView() {
 
     if (isSuccess) {
         return (
-            <div className="max-w-xl mx-auto bg-white rounded-2xl shadow-sm border border-gray-200 p-12 text-center animate-in zoom-in duration-300">
-                <div className="text-6xl mb-6">🎉</div>
-                <h2 className="text-3xl font-bold text-gray-900 mb-2">Evaluation Submitted!</h2>
-                <p className="text-gray-500 mb-8">Thank you for grading contestant {contestant}.</p>
-                <button
-                    onClick={resetForm}
-                    className="px-8 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transform hover:scale-105 active:scale-95 transition-all"
-                >
-                    Grade Next Contestant
-                </button>
+            <div className="max-w-xl mx-auto bg-white rounded-2xl shadow-sm border border-gray-200 p-12 text-center animate-in zoom-in duration-500">
+                <div className="text-6xl mb-6 animate-bounce">🌟</div>
+                <h2 className="text-3xl font-bold text-gray-900 mb-2">Saved!</h2>
+                <p className="text-gray-500 mb-8">Thanks for helping us rate <strong>{contestant}</strong>.</p>
+                <div className="flex flex-col gap-3">
+                    <button
+                        onClick={resetForm}
+                        className="w-full px-8 py-4 bg-gray-900 text-white rounded-xl font-bold text-lg hover:bg-black transform hover:scale-105 active:scale-95 transition-all shadow-lg cursor-pointer"
+                    >
+                        Rate Another Contestant
+                    </button>
+                    <p className="text-xs text-gray-400 mt-2">Your vote has been counted securely.</p>
+                </div>
             </div>
         );
     }
@@ -129,7 +132,7 @@ export default function GraderView() {
                         <button
                             onClick={nextStep}
                             disabled={!contestant || isAlreadyGraded}
-                            className="w-full py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-[1.02] active:scale-100 transition-all"
+                            className="w-full py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-[1.02] active:scale-100 transition-all cursor-pointer"
                         >
                             Next
                         </button>
@@ -163,8 +166,19 @@ export default function GraderView() {
                                         />
                                     </div>
                                     <div className="flex gap-3 pt-4">
-                                        <button onClick={prevStep} className="flex-1 py-3 border rounded-lg hover:bg-gray-50 transform hover:scale-[1.02] active:scale-[0.98] transition-all">Back</button>
-                                        <button onClick={nextStep} className="flex-1 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transform hover:scale-[1.02] active:scale-[0.98] transition-all">Next</button>
+                                        <button onClick={prevStep} className="flex-1 py-3 border rounded-lg hover:bg-gray-50 transform hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer">Back</button>
+
+                                        {currentStep === gradingCriteria.length ? (
+                                            <button
+                                                onClick={finishGrading}
+                                                disabled={isSubmitting}
+                                                className="flex-1 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 font-bold shadow-lg transform hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 cursor-pointer"
+                                            >
+                                                {isSubmitting ? 'Saving...' : 'Finish & Submit'}
+                                            </button>
+                                        ) : (
+                                            <button onClick={nextStep} className="flex-1 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transform hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer">Next</button>
+                                        )}
                                     </div>
                                 </>
                             );
@@ -172,24 +186,7 @@ export default function GraderView() {
                     </div>
                 )}
 
-                {/* Step 6: Review */}
-                {currentStep > gradingCriteria.length && (
-                    <div className="text-center space-y-6 animate-in zoom-in duration-300">
-                        <div>
-                            <div className="text-sm text-gray-500 uppercase tracking-wider">Final Grade</div>
-                            <div className="text-7xl font-black text-gray-900 my-2">{getGrade(totalScore)}</div>
-                            <div className="text-xl text-gray-600">{totalScore} / 100</div>
-                        </div>
-                        <button
-                            onClick={finishGrading}
-                            disabled={isSubmitting}
-                            className="w-full py-4 bg-green-600 text-white rounded-lg font-bold text-lg hover:bg-green-700 shadow-lg transform hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50"
-                        >
-                            {isSubmitting ? 'Saving...' : 'Save Evaluation'}
-                        </button>
-                        <button onClick={prevStep} disabled={isSubmitting} className="text-gray-500 hover:text-gray-900 text-sm">Go Back</button>
-                    </div>
-                )}
+                {/* Review Step Removed for Auto-Save */}
             </div>
         </div>
     );

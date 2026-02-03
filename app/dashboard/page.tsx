@@ -72,7 +72,7 @@ export default function DashboardPage() {
                     <span className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full ml-2">Teacher Dashboard</span>
                 </div>
                 <div>
-                    <button onClick={handleLogout} className="text-sm text-gray-500 hover:text-gray-900">Logout</button>
+                    <button onClick={handleLogout} className="text-sm text-gray-500 hover:text-gray-900 cursor-pointer">Logout</button>
                 </div>
             </nav>
 

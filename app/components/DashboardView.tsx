@@ -161,26 +161,26 @@ export default function DashboardView() {
                         {sortConfig && (
                             <button
                                 onClick={() => setSortConfig(null)}
-                                className="px-3 py-2 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200 font-medium text-sm flex items-center justify-center gap-2 shadow-sm hover:scale-105 active:scale-95 transition-all"
+                                className="px-3 py-2 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200 font-medium text-sm flex items-center justify-center gap-2 shadow-sm hover:scale-105 active:scale-95 transition-all cursor-pointer"
                             >
                                 ✕ Reset Sort
                             </button>
                         )}
                         <button
                             onClick={() => setShowStats(true)}
-                            className="flex-1 md:flex-none px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 font-medium text-sm flex items-center justify-center gap-2 shadow-sm hover:scale-105 active:scale-95 transition-all"
+                            className="flex-1 md:flex-none px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 font-medium text-sm flex items-center justify-center gap-2 shadow-sm hover:scale-105 active:scale-95 transition-all cursor-pointer"
                         >
                             <span>Statistics</span>
                         </button>
                         <button
                             onClick={() => setShowQr(true)}
-                            className="flex-1 md:flex-none px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium text-sm flex items-center justify-center gap-2 shadow-sm hover:scale-105 active:scale-95 transition-all"
+                            className="flex-1 md:flex-none px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium text-sm flex items-center justify-center gap-2 shadow-sm hover:scale-105 active:scale-95 transition-all cursor-pointer"
                         >
                             <span>Show QR Code</span>
                         </button>
                         <button
                             onClick={handleBulkExport}
-                            className="flex-1 md:flex-none px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-medium text-sm flex items-center justify-center gap-2 shadow-sm hover:scale-105 active:scale-95 transition-all"
+                            className="flex-1 md:flex-none px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-medium text-sm flex items-center justify-center gap-2 shadow-sm hover:scale-105 active:scale-95 transition-all cursor-pointer"
                         >
                             <span>Download CSV</span>
                         </button>
@@ -271,7 +271,7 @@ export default function DashboardView() {
                     <div className="bg-white rounded-2xl shadow-xl p-8 max-w-sm w-full relative">
                         <button
                             onClick={() => setShowQr(false)}
-                            className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
+                            className="absolute top-4 right-4 w-10 h-10 flex items-center justify-center hover:bg-gray-100 rounded-full transition-all text-gray-500 hover:text-gray-900 hover:scale-110 active:scale-95 cursor-pointer"
                         >
                             ✕
                         </button>
