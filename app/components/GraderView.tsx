@@ -104,11 +104,11 @@ export default function GraderView() {
                         <div className="space-y-4">
                             <div>
                                 <label className="block text-sm font-medium text-gray-700">Contestant No.</label>
-                                <input value={contestant} onChange={e => setContestant(e.target.value)} className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" placeholder="e.g. 001" autoFocus />
+                                <input value={contestant} onChange={e => setContestant(e.target.value)} className="w-full max-w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" placeholder="e.g. 001" autoFocus />
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-gray-700">Date</label>
-                                <input type="date" value={date} onChange={e => setDate(e.target.value)} className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" />
+                                <input type="date" value={date} onChange={e => setDate(e.target.value)} className="w-full max-w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" style={{ minWidth: 0 }} />
                             </div>
                         </div>
                         <button onClick={nextStep} disabled={!contestant} className="w-full py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 disabled:opacity-50 transition">Next</button>
