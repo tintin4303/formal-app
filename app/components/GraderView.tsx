@@ -96,7 +96,7 @@ export default function GraderView() {
                 />
             </div>
 
-            <div className="p-8">
+            <div className="p-5 md:p-8">
                 {/* Step 0: Intro */}
                 {currentStep === 0 && (
                     <div className="space-y-6 animate-in fade-in">
@@ -135,7 +135,7 @@ export default function GraderView() {
                                             type="number"
                                             value={scores[c.id] || ''}
                                             onChange={e => handleScoreChange(c.id, e.target.value, c.maxPoints)}
-                                            className="w-full text-5xl font-bold text-center p-6 border rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none"
+                                            className="w-full text-4xl md:text-5xl font-bold text-center p-3 md:p-6 border rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none"
                                             placeholder="0"
                                             autoFocus
                                         />

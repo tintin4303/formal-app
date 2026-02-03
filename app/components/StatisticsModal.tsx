@@ -51,7 +51,7 @@ export default function StatisticsModal({ submissions, onClose }: Props) {
             <div className="bg-white rounded-2xl shadow-xl w-full max-w-4xl max-h-[90vh] overflow-y-auto relative flex flex-col">
                 {/* Header */}
                 <div className="flex justify-between items-center p-6 border-b border-gray-100 sticky top-0 bg-white z-10">
-                    <h3 className="text-xl font-bold text-gray-900">📊 Statistics Dashboard</h3>
+                    <h3 className="text-xl font-bold text-gray-900">Statistics Dashboard</h3>
                     <button
                         onClick={onClose}
                         className="p-2 hover:bg-gray-100 rounded-full transition text-gray-500 hover:text-gray-900"
@@ -64,10 +64,10 @@ export default function StatisticsModal({ submissions, onClose }: Props) {
                 <div className="p-6 space-y-8">
                     {/* Summary Cards */}
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        <StatCard label="Total Evaluations" value={stats?.total || 0} icon="📝" />
-                        <StatCard label="Average Score" value={stats?.avgScore.toFixed(1) || '0'} icon="📈" />
-                        <StatCard label="Highest Score" value={stats?.maxScore || 0} icon="🏆 text-yellow-500" />
-                        <StatCard label="Lowest Score" value={stats?.minScore || 0} icon="📉 text-red-500" />
+                        <StatCard label="Total Evaluations" value={stats?.total || 0} />
+                        <StatCard label="Average Score" value={stats?.avgScore.toFixed(1) || '0'} />
+                        <StatCard label="Highest Score" value={stats?.maxScore || 0} />
+                        <StatCard label="Lowest Score" value={stats?.minScore || 0} />
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -119,10 +119,9 @@ export default function StatisticsModal({ submissions, onClose }: Props) {
     );
 }
 
-function StatCard({ label, value, icon }: { label: string, value: string | number, icon: string }) {
+function StatCard({ label, value }: { label: string, value: string | number }) {
     return (
         <div className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm text-center">
-            <div className={`text-2xl mb-1 ${icon.includes('text') ? '' : 'grayscale'}`}>{icon.replace(/[a-z- ]/g, '')}</div>
             <div className="text-2xl font-bold text-gray-900">{value}</div>
             <div className="text-xs text-gray-500 font-medium uppercase tracking-wide mt-1">{label}</div>
         </div>
