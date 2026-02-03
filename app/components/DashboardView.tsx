@@ -108,7 +108,7 @@ export default function DashboardView() {
                         onClick={() => setShowStats(true)}
                         className="flex-1 md:flex-none px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 font-medium text-sm flex items-center justify-center gap-2 shadow-sm transition"
                     >
-                        <span>📊 Statistics</span>
+                        <span>Statistics</span>
                     </button>
                     <button
                         onClick={() => setShowQr(true)}
