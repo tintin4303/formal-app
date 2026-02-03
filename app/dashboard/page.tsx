@@ -57,7 +57,7 @@ export default function DashboardPage() {
                         <button type="submit" className="w-full py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition">
                             Access Dashboard
                         </button>
-                        <p className="text-xs text-center text-gray-400 mt-4">Default password: admin123</p>
+
                     </form>
                 </div>
             </div>
