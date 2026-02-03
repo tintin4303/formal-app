@@ -23,6 +23,7 @@ export async function GET() {
 
         return NextResponse.json({ success: true, data: submissions });
     } catch (error) {
-        return NextResponse.json({ success: false, error: (error as Error).message }, { status: 400 });
+        console.error("API Error:", error);
+        return NextResponse.json({ success: false, error: (error as Error).message }, { status: 500 });
     }
 }
