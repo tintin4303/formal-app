@@ -14,15 +14,15 @@ export default function Home() {
         </div>
       </nav>
 
-      <main className="p-4 md:p-8 max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
+      <main className="p-4 md:p-8 max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4">
         <div className="flex flex-col">
           <GraderView />
         </div>
-        <div className="relative h-[800px] md:h-full min-h-[800px] w-full overflow-hidden shadow-md bg-gray-200">
+        <div className="relative h-[700px] md:h-full w-full overflow-hidden bg-transparent">
           <img
             src="/banner.png"
             alt="Japanese Speech Contest Banner"
-            className="absolute inset-0 w-full h-full object-cover"
+            className="absolute inset-0 w-full h-full object-contain"
           />
         </div>
       </main>

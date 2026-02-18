@@ -161,7 +161,7 @@ export default function GraderView() {
                                 <>
                                     <div className="flex justify-between text-sm font-medium text-gray-500 uppercase tracking-wider">
                                         <span>Criterion {currentStep}/5</span>
-                                        <span>Max: {c.maxPoints} pts</span>
+                                        <span className="text-red-600 font-bold">Max Points: {c.maxPoints}</span>
                                     </div>
                                     <h2 className="text-2xl font-bold">{c.title}</h2>
                                     <ul className="bg-blue-50 p-4 rounded-lg text-blue-900 text-sm list-disc list-inside space-y-1">
