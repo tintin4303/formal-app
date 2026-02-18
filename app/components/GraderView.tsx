@@ -115,13 +115,26 @@ export default function GraderView() {
             <div className="p-5 md:p-8">
                 {/* Step 0: Intro */}
                 {currentStep === 0 && (
-                    <div className="space-y-6 animate-in fade-in">
+                    <div className="space-y-6 animate-in fade-in duration-300">
+                        <div className="flex justify-between text-sm font-medium text-gray-500 uppercase tracking-wider">
+                            <span>Step 0/5</span>
+                            <span>Setup Required</span>
+                        </div>
                         <h2 className="text-2xl font-bold">Rate Contestant</h2>
-                        <div className="space-y-4">
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700">Contestant No.</label>
-                                <input value={contestant} onChange={e => setContestant(e.target.value)} className="w-full max-w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" autoFocus />
-                            </div>
+                        <ul className="bg-blue-50 p-4 rounded-lg text-blue-900 text-sm list-disc list-inside space-y-1">
+                            <li>Check the contestant&apos;s identification number</li>
+                            <li>Ensure you are rating the correct speaker</li>
+                            <li>Enter the number below to begin evaluation</li>
+                        </ul>
+                        <div className="pt-2">
+                            <label className="block text-center text-sm font-medium text-gray-500 mb-2 uppercase tracking-wide">Enter Contestant No.</label>
+                            <input
+                                value={contestant}
+                                onChange={e => setContestant(e.target.value)}
+                                className="w-full text-4xl md:text-5xl font-bold text-center p-3 md:p-6 border rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none"
+                                placeholder="--"
+                                autoFocus
+                            />
                         </div>
                         {isAlreadyGraded && (
                             <div className="bg-red-50 text-red-600 p-3 rounded-lg text-sm flex items-center gap-2">
@@ -132,9 +145,9 @@ export default function GraderView() {
                         <button
                             onClick={nextStep}
                             disabled={!contestant || isAlreadyGraded}
-                            className="w-full py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-[1.02] active:scale-100 transition-all cursor-pointer"
+                            className="w-full py-4 bg-blue-600 text-white rounded-xl font-bold text-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-[1.02] active:scale-100 transition-all cursor-pointer shadow-md"
                         >
-                            Next
+                            Start Rating
                         </button>
                     </div>
                 )}
