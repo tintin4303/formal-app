@@ -85,7 +85,7 @@ export default function GraderView() {
 
     if (isSuccess) {
         return (
-            <div className="max-w-xl mx-auto bg-white rounded-2xl shadow-sm border border-gray-200 p-12 text-center animate-in zoom-in duration-500">
+            <div className="w-full bg-white rounded-2xl shadow-sm border border-gray-200 p-12 text-center animate-in zoom-in duration-500">
                 <div className="text-6xl mb-6 animate-bounce">🌟</div>
                 <h2 className="text-3xl font-bold text-gray-900 mb-2">Saved!</h2>
                 <p className="text-gray-500 mb-8">Thanks for helping us rate <strong>{contestant}</strong>.</p>
@@ -103,7 +103,7 @@ export default function GraderView() {
     }
 
     return (
-        <div className="max-w-xl mx-auto bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+        <div className="w-full bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
             {/* Progress Bar */}
             <div className="h-1 bg-gray-100 w-full">
                 <div

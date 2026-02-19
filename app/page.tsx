@@ -14,7 +14,7 @@ export default function Home() {
         </div>
       </nav>
 
-      <main className="p-4 md:p-8 max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4">
+      <main className="p-4 md:p-8 max-w-full grid grid-cols-1 md:grid-cols-2 gap-0">
         <div className="flex flex-col">
           <GraderView />
         </div>
